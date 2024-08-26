@@ -11,16 +11,17 @@ class NewMessages extends StatefulWidget {
 
 class _NewMessagesState extends State<NewMessages> {
   final _messageController = TextEditingController();
+
   @override
   void dispose() {
     _messageController.dispose();
     super.dispose();
   }
 
-  void _SumitMessage() async {
-    final EnteredMessage = _messageController.text;
+  void _submitMessage() async {
+    final enteredMessage = _messageController.text;
 
-    if (EnteredMessage.trim().isEmpty) {
+    if (enteredMessage.trim().isEmpty) {
       return;
     }
     FocusScope.of(context).unfocus();
@@ -33,7 +34,7 @@ class _NewMessagesState extends State<NewMessages> {
         .get();
 
     FirebaseFirestore.instance.collection('chat').add({
-      'text': EnteredMessage,
+      'text': enteredMessage,
       'createdAt': Timestamp.now(),
       'userId': user.uid,
       'username': userData.data()!['username'],
@@ -41,28 +42,49 @@ class _NewMessagesState extends State<NewMessages> {
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(
-        left: 15,
-        right: 1,
-        bottom: 30,
-      ),
+      padding: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
       child: Row(
         children: [
           Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(20),
+              ),
               child: TextField(
-                  controller: _messageController,
-                  textCapitalization: TextCapitalization.sentences,
-                  autocorrect: true,
-                  enableSuggestions: true,
-                  decoration:
-                      const InputDecoration(label: Text('Send messages...')))),
-          IconButton(
-            color: Theme.of(context).colorScheme.primary,
-            icon: Icon(Icons.send),
-            onPressed: _SumitMessage,
-          )
+                controller: _messageController,
+                textCapitalization: TextCapitalization.sentences,
+                autocorrect: true,
+                enableSuggestions: true,
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 12,
+                    horizontal: 16,
+                  ),
+                  hintText: 'Send a message...',
+                  border: InputBorder.none,
+                ),
+                maxLines: 1, // Allows up to 5 lines of text
+                keyboardType: TextInputType.multiline,
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.send),
+              color: Colors.white,
+              onPressed: _submitMessage,
+              padding: EdgeInsets.all(16),
+            ),
+          ),
         ],
       ),
     );

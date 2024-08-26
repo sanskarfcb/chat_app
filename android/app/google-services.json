@@ -9,8 +9,8 @@
       "client_info": {
         "mobilesdk_app_id": "1:235834481610:android:515c732cb8bb8447c88d33",
         "android_client_info": {
-          "package_name": "com.sanskarmishra.myapp"
-        }
+          "package_name": "com.example.chat_app"
+        }        
       },
       "oauth_client": [],
       "api_key": [
